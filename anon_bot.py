@@ -1,3 +1,25 @@
+import asyncio
+import os
+from aiogram import Bot, Dispatcher, types
+from aiogram.enums import ParseMode
+from aiogram.client.bot import DefaultBotProperties
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import CommandStart
+from aiogram.fsm.storage.memory import MemoryStorage
+
+API_TOKEN = os.getenv("API_TOKEN")
+CHANNEL_ID = os.getenv("CHANNEL_ID")
+COOLDOWN = 30  # секунды между сообщениями от одного юзера
+
+last_message_time = {}
+
+bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+dp = Dispatcher(storage=MemoryStorage())
+
+@dp.message(CommandStart())
+async def start(message: Message):
+    await message.answer("Привет, крысиный собрат! Пиши свой писк или кидай фото/видео — и я передам в нору.")
+
 @dp.message()
 async def anon_forward(message: Message):
     user_id = message.from_user.id
@@ -30,3 +52,20 @@ async def anon_forward(message: Message):
 
     else:
         await message.answer("Пока что я принимаю только текст, фото и видео. А говно которое ты прислал, я не пон.")
+
+async def monthly_reminder():
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="НАПИСАТЬ СЛУХ", url="https://t.me/Anoanoano1Bot")]
+    ])
+    await bot.send_message(CHANNEL_ID, "📢 Хочешь рассказать что-то анонимно?", reply_markup=keyboard)
+
+    while True:
+        await asyncio.sleep(30 * 24 * 60 * 60)
+        await bot.send_message(CHANNEL_ID, "📢 Хочешь рассказать что-то анонимно?", reply_markup=keyboard)
+
+async def main():
+    asyncio.create_task(monthly_reminder())
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
