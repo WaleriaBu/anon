@@ -38,7 +38,7 @@ async def anon_forward(message: Message):
         if any(word in text.lower() for word in banned_words) or len(text) < 10:
             await message.answer("Что за хуйню ты мне шлешь??")
             return
-        await bot.send_message(CHANNEL_ID, f"Крысиный писк:\n{text}")
+       await bot.send_message(CHANNEL_ID, f"Крысиный писк:\n{text}")
 {text}")
         await message.answer("Отправлено!")
 
