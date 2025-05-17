@@ -2,18 +2,17 @@ import asyncio
 import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
-from aiogram.client.bot import DefaultBotProperties
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import CommandStart
 from aiogram.fsm.storage.memory import MemoryStorage
 
 API_TOKEN = os.getenv("API_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")
-COOLDOWN = 30  # секунды между сообщениями от одного юзера
+COOLDOWN = 30
 
 last_message_time = {}
 
-bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+bot = Bot(token=API_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(storage=MemoryStorage())
 
 @dp.message(CommandStart())
@@ -43,7 +42,7 @@ async def anon_forward(message: Message):
     elif message.photo:
         caption = message.caption or ""
         await bot.send_photo(CHANNEL_ID, message.photo[-1].file_id, caption=f"🐀 Анонимное фото:\n{caption}")
-        await message.answer("Спасибо за мем.")
+        await message.answer("Картинка ушла в подвал.")
 
     elif message.video:
         caption = message.caption or ""
