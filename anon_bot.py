@@ -51,20 +51,3 @@ async def anon_forward(message: Message):
 
     else:
         await message.answer("Пока что я принимаю только текст, фото и видео. А говно которое ты прислал, я не пон.")
-
-async def monthly_reminder():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="НАПИСАТЬ СЛУХ", url="https://t.me/Anoanoano1Bot")]
-    ])
-    await bot.send_message(CHANNEL_ID, "📢 Хочешь рассказать что-то анонимно?", reply_markup=keyboard)
-
-    while True:
-        await asyncio.sleep(30 * 24 * 60 * 60)
-        await bot.send_message(CHANNEL_ID, "📢 Хочешь рассказать что-то анонимно?", reply_markup=keyboard)
-
-async def main():
-    asyncio.create_task(monthly_reminder())
-    await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
